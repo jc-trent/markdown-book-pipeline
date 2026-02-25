@@ -1,0 +1,48 @@
+title: "Lorem Ipsum"
+author: "A. N. Author"
+prefix: "lorem_ipsum"
+lang: en-US
+
+# Series metadata (optional, used in EPUB metadata)
+series: "Example Series"
+series_number: 1
+
+# Pandoc markdown extensions to enable
+markdown_extensions: "fenced_divs+native_divs"
+
+# Lua filters applied to all formats (resolved from artifacts/)
+filters:
+  - pdf_filter.lua
+
+# ── EPUB settings ──────────────────────────────────────────────
+epub:
+  toc: true
+  toc_depth: 1
+  css: epub.css
+  cover: cover.jpg
+  cover_alt: "Cover image for Lorem Ipsum"
+  accessibility:
+    accessMode: textual
+    accessModeSufficient: textual
+    accessibilityFeature:
+      - structuralNavigation
+      - tableOfContents
+      - readingOrder
+      - alternativeText
+    accessibilityHazard: none
+    accessibilitySummary: >
+      This publication meets WCAG 2.0 Level AA guidelines.
+
+# ── DOCX settings ──────────────────────────────────────────────
+docx:
+  toc: true
+  toc_depth: 1
+  reference: reference.docx
+
+# ── PDF settings ───────────────────────────────────────────────
+pdf:
+  template: book.tex
+  filter: pdf_filter.lua
+  engine: xelatex
+  scene_break_macro: "\\scenebreak{}"
+  job_suffix: "_print_6x9"

@@ -1,0 +1,43 @@
+# Build output
+output/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# uv
+uv.lock
+
+# LaTeX intermediates
+*.aux
+*.log
+*.toc
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# Build error logs
+build_error.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor/IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# epubcheck reports
+*.json
+!book.yaml
+
+# Temporary files from epub post-processing
+epub_patch_*/
+
+# Tools downloaded locally
+tools/epubcheck*/

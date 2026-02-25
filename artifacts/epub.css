@@ -1,0 +1,286 @@
+/* ============================================
+   Example Book — epub stylesheet
+   For use with pandoc: --css epub.css
+   ============================================ */
+
+/* --- Base Typography --- */
+body {
+  margin: 1rem;
+  line-height: 1.5;
+}
+
+p {
+  margin: 0;
+  text-indent: 0;
+}
+
+p + p {
+  text-indent: 1.5rem;
+}
+
+
+/* ── Title Page ────────────────────────────────────────── */
+/* Markdown: # Example Book {.titlepage .unnumbered .unlisted}
+   Epub output: <section class="titlepage unnumbered unlisted">
+                  <h1>Example Book</h1> ... </section> */
+
+section.titlepage {
+  text-align: center;
+  margin-top: 30%;
+  page-break-after: always;
+}
+
+section.titlepage > h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  font-style: normal;
+  line-height: 1.2em;
+  margin: 0 0 1.5rem 0;
+}
+
+
+/* ── Front Matter Pages (copyright, dedication, epigraph) ── */
+/* Hidden heading forces epub page split without visible text.
+   Markdown: # Copyright {.frontpage .unnumbered .unlisted} */
+
+section.frontpage > h1 {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.frontmatter {
+  margin-top: 30%;
+  page-break-after: always;
+}
+
+.frontmatter p {
+  text-indent: 0;
+}
+
+.frontmatter.centered {
+  text-align: center;
+}
+
+
+/* ── Chapter Headings ──────────────────────────────────── */
+/* Target: centered, italic, moderate size, generous top margin */
+
+h1 {
+  text-align: center;
+  font-size: 1.33rem;
+  font-weight: normal;
+  font-style: italic;
+  line-height: 1em;
+  margin: 6rem 0 2rem 0;
+}
+
+
+/* ── Section Subheadings (## in markdown) ──────────────── */
+/* Named sections within chapters and individual appendix titles */
+
+h2 {
+  text-align: center;
+  font-size: 1.17rem;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1em;
+  margin: 2rem 10% 0.83rem 10%;
+  border-top: 1px solid black;
+  border-bottom: 1px solid black;
+  padding: 12px 0;
+}
+
+
+/* ── Subsection Headings (### in markdown) ─────────────── */
+
+h3 {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: normal;
+  font-style: italic;
+  line-height: 1em;
+  margin: 0 0 1.33rem 0;
+}
+
+h2 + h3 {
+  padding-top: 16px;
+}
+
+
+/* ── Block Quotes (Chapter Epigraphs) ──────────────────── */
+
+blockquote {
+  margin: 1.5rem 2rem;
+  font-style: italic;
+}
+
+blockquote p {
+  margin: 0;
+  text-indent: 0;
+}
+
+blockquote p + p {
+  text-indent: 0.94rem;
+}
+
+
+/* ── Centered Text ─────────────────────────────────────── */
+/* For epigraph attributions:
+   ::: {.centered}
+   — From the Primer on Recruit Conditioning
+   ::: */
+
+.centered {
+  text-align: center;
+  text-indent: 0;
+  font-style: italic;
+  margin: 0 2rem 1rem 2rem;
+}
+
+.centered p {
+  text-indent: 0;
+}
+
+blockquote + .centered {
+  margin-top: -1rem;
+}
+
+
+/* ── Scene Breaks / Separators ─────────────────────────── */
+/* Short centered line, not full-width rule */
+
+hr {
+  width: 25%;
+  margin: 1.5em auto;
+  border: none;
+  border-top: 1px solid black;
+}
+
+hr + p {
+  text-indent: 0;
+}
+
+
+/* ── Military Documents / Monospace ────────────────────── */
+
+.military {
+  margin: 1rem 0 1.5rem 0;
+  text-indent: 0;
+  line-height: 1.3em;
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+.military p {
+  text-indent: 0;
+}
+
+
+/* ── Images & Figures ──────────────────────────────────── */
+
+img {
+  display: block;
+  margin: 1rem auto;
+}
+
+figure {
+  page-break-inside: avoid;
+  text-align: center;
+}
+
+figcaption,
+.caption {
+  margin: 0;
+  text-indent: 0;
+  text-align: center;
+  font-size: 0.83rem;
+}
+
+img + figcaption {
+  margin-top: -0.75rem;
+}
+
+
+/* ── Code ──────────────────────────────────────────────── */
+
+pre > code {
+  white-space: pre-wrap;
+  -webkit-hyphens: none;
+  hyphens: none;
+}
+
+code {
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+}
+
+
+/* ── Lists ─────────────────────────────────────────────── */
+
+ol ol { list-style-type: lower-alpha; }
+ol ol ol { list-style-type: lower-roman; }
+ol ol ol ol { list-style-type: decimal; }
+
+ul ul {
+  list-style: none;
+  display: block;
+  text-indent: -0.6em;
+}
+
+ul ul li:before {
+  content: '\2043\0020';
+}
+
+
+/* ── Table of Contents ─────────────────────────────────── */
+
+nav#toc ol {
+  list-style: none;
+  line-height: 1.5em;
+  margin: 0.5rem 0;
+}
+
+nav#toc ol li:before {
+  content: none;
+}
+
+
+/* ── Tables ────────────────────────────────────────────── */
+
+table {
+  margin: 1em auto;
+  border-spacing: 0;
+  border: solid #000;
+  border-width: 0pt 0pt 1pt 1pt;
+}
+
+th, td {
+  padding: 0.25em 0.35em;
+  border: solid #000;
+  border-width: 1pt 1pt 0pt 0pt;
+}
+
+td p {
+  margin: 0;
+  text-indent: 0;
+}
+
+table caption {
+  margin-top: 0.25em;
+  caption-side: bottom;
+  text-align: center;
+}
+
+
+/* ── Utility ───────────────────────────────────────────── */
+
+.small-caps {
+  font-variant: small-caps;
+}

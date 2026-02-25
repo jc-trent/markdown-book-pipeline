@@ -1,0 +1,8 @@
+[project]
+name = "markdown-book-pipeline"
+version = "0.1.0"
+description = "A markdown-first build pipeline for self-publishing novels."
+requires-python = ">=3.8"
+dependencies = [
+    "pyyaml",
+]
