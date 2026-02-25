@@ -37,7 +37,7 @@ epub:
 docx:
   toc: true
   toc_depth: 1
-  reference: reference.docx
+  # reference: reference.docx
 
 # ── PDF settings ───────────────────────────────────────────────
 pdf:
