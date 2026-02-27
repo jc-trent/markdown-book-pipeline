@@ -18,8 +18,7 @@ except ImportError:
 def natural_sort_key(s):
     """Sort strings with embedded numbers naturally (2.md before 10.md)."""
     return [
-        int(text) if text.isdigit() else text.lower()
-        for text in re.split(r"(\d+)", s)
+        int(text) if text.isdigit() else text.lower() for text in re.split(r"(\d+)", s)
     ]
 
 
@@ -148,7 +147,7 @@ def resolve_artifact(book_dir, filename):
 def resolve_filters(book_dir, filter_names):
     """Resolve a list of Lua filter filenames to paths. Warns on missing."""
     filters = []
-    for name in (filter_names or []):
+    for name in filter_names or []:
         path = resolve_artifact(book_dir, name)
         if path:
             filters.append(path)

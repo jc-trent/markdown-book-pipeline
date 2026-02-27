@@ -9,7 +9,6 @@ Can be invoked from the unified build.py CLI or standalone.
 
 import os
 import re
-import sys
 
 from booklib.resolve import section_for_path
 
@@ -22,84 +21,120 @@ from booklib.resolve import section_for_path
 #   severity: "error" | "warning" | "info"
 
 ENCODING_PATTERNS = [
-    ("Single-character ellipsis (use '...' instead)",
-     re.compile(r"\u2026"), "...", "warning"),
-    ("Unicode en-dash (use '--' instead)",
-     re.compile(r"\u2013"), "--", "warning"),
-    ("Unicode em-dash (use '---' instead)",
-     re.compile(r"\u2014"), "---", "warning"),
-    ("Curly double quote (use straight quotes)",
-     re.compile(r"[\u201C\u201D]"), '"', "warning"),
-    ("Curly single quote/apostrophe (use straight quotes)",
-     re.compile(r"[\u2018\u2019]"), "'", "warning"),
-    ("Non-breaking space",
-     re.compile(r"\u00A0"), " ", "error"),
-    ("Zero-width space/joiner",
-     re.compile(r"[\u200B-\u200D\uFEFF]"), "", "error"),
-    ("Soft hyphen",
-     re.compile(r"\u00AD"), "", "error"),
-    ("Directional mark (LTR/RTL)",
-     re.compile(r"[\u200E\u200F]"), "", "error"),
+    (
+        "Single-character ellipsis (use '...' instead)",
+        re.compile(r"\u2026"),
+        "...",
+        "warning",
+    ),
+    ("Unicode en-dash (use '--' instead)", re.compile(r"\u2013"), "--", "warning"),
+    ("Unicode em-dash (use '---' instead)", re.compile(r"\u2014"), "---", "warning"),
+    (
+        "Curly double quote (use straight quotes)",
+        re.compile(r"[\u201C\u201D]"),
+        '"',
+        "warning",
+    ),
+    (
+        "Curly single quote/apostrophe (use straight quotes)",
+        re.compile(r"[\u2018\u2019]"),
+        "'",
+        "warning",
+    ),
+    ("Non-breaking space", re.compile(r"\u00A0"), " ", "error"),
+    ("Zero-width space/joiner", re.compile(r"[\u200B-\u200D\uFEFF]"), "", "error"),
+    ("Soft hyphen", re.compile(r"\u00AD"), "", "error"),
+    ("Directional mark (LTR/RTL)", re.compile(r"[\u200E\u200F]"), "", "error"),
 ]
 
 WHITESPACE_PATTERNS = [
-    ("Tab character (use spaces)",
-     re.compile(r"\t"), "    ", "warning"),
-    ("Multiple spaces (not in indent)",
-     re.compile(r"(?<=\S)  +"), " ", "warning"),
-    ("Trailing whitespace",
-     re.compile(r" +$", re.MULTILINE), "", "warning"),
-    ("Carriage return (Windows line ending)",
-     re.compile(r"\r"), "", "error"),
-    ("Three or more consecutive blank lines",
-     re.compile(r"\n{4,}"), "\n\n\n", "warning"),
+    ("Tab character (use spaces)", re.compile(r"\t"), "    ", "warning"),
+    ("Multiple spaces (not in indent)", re.compile(r"(?<=\S)  +"), " ", "warning"),
+    ("Trailing whitespace", re.compile(r" +$", re.MULTILINE), "", "warning"),
+    ("Carriage return (Windows line ending)", re.compile(r"\r"), "", "error"),
+    (
+        "Three or more consecutive blank lines",
+        re.compile(r"\n{4,}"),
+        "\n\n\n",
+        "warning",
+    ),
 ]
 
 PUNCTUATION_PATTERNS = [
-    ("Multiple exclamation marks",
-     re.compile(r"!!+"), None, "info"),
-    ("Multiple question marks",
-     re.compile(r"\?\?+"), None, "info"),
-    ("Repeated comma",
-     re.compile(r",,+"), None, "warning"),
-    ("Four+ dots (check if intentional)",
-     re.compile(r"\.{4,}"), None, "info"),
-    ("Space before punctuation",
-     re.compile(r"(?<=\w) +(?=[,;:!?](?:\s|$))"), None, "info"),
+    ("Multiple exclamation marks", re.compile(r"!!+"), None, "info"),
+    ("Multiple question marks", re.compile(r"\?\?+"), None, "info"),
+    ("Repeated comma", re.compile(r",,+"), None, "warning"),
+    ("Four+ dots (check if intentional)", re.compile(r"\.{4,}"), None, "info"),
+    (
+        "Space before punctuation",
+        re.compile(r"(?<=\w) +(?=[,;:!?](?:\s|$))"),
+        None,
+        "info",
+    ),
 ]
 
 STRUCTURE_PATTERNS = [
-    ("Scene break using --- (use *** instead)",
-     re.compile(r"^\n---\n", re.MULTILINE), "\n***\n", "warning"),
-    ("Scene break missing blank line before",
-     re.compile(r"([^\n])\n\*\*\*\n"), None, "error"),
-    ("Scene break missing blank line after",
-     re.compile(r"\n\*\*\*\n([^\n])"), None, "error"),
-    ("Missing space after heading hash",
-     re.compile(r"^(#{1,6})[^ #\n{]", re.MULTILINE), None, "error"),
-    ("Trailing hash on heading",
-     re.compile(r"^(#{1,6})\s+.+\s+#+\s*$", re.MULTILINE), None, "warning"),
-    ("Fenced div missing space after :::",
-     re.compile(r"^:::\{", re.MULTILINE), "::: {", "error"),
-    ("Raw LaTeX block (won't render in epub/docx)",
-     re.compile(r"```\{=latex\}"), None, "error"),
+    (
+        "Scene break using --- (use *** instead)",
+        re.compile(r"^\n---\n", re.MULTILINE),
+        "\n***\n",
+        "warning",
+    ),
+    (
+        "Scene break missing blank line before",
+        re.compile(r"([^\n])\n\*\*\*\n"),
+        None,
+        "error",
+    ),
+    (
+        "Scene break missing blank line after",
+        re.compile(r"\n\*\*\*\n([^\n])"),
+        None,
+        "error",
+    ),
+    (
+        "Missing space after heading hash",
+        re.compile(r"^(#{1,6})[^ #\n{]", re.MULTILINE),
+        None,
+        "error",
+    ),
+    (
+        "Trailing hash on heading",
+        re.compile(r"^(#{1,6})\s+.+\s+#+\s*$", re.MULTILINE),
+        None,
+        "warning",
+    ),
+    (
+        "Fenced div missing space after :::",
+        re.compile(r"^:::\{", re.MULTILINE),
+        "::: {",
+        "error",
+    ),
+    (
+        "Raw LaTeX block (won't render in epub/docx)",
+        re.compile(r"```\{=latex\}"),
+        None,
+        "error",
+    ),
 ]
 
-ALL_PATTERNS = ENCODING_PATTERNS + WHITESPACE_PATTERNS + PUNCTUATION_PATTERNS + STRUCTURE_PATTERNS
+ALL_PATTERNS = (
+    ENCODING_PATTERNS + WHITESPACE_PATTERNS + PUNCTUATION_PATTERNS + STRUCTURE_PATTERNS
+)
 
 
 # ── Severity display ───────────────────────────────────────────────────
 
 SEVERITY_COLOR = {
-    "error":   "\033[31m✗\033[0m",
+    "error": "\033[31m✗\033[0m",
     "warning": "\033[33m!\033[0m",
-    "info":    "\033[36m·\033[0m",
+    "info": "\033[36m·\033[0m",
 }
 
 SEVERITY_PLAIN = {
-    "error":   "[ERROR]",
+    "error": "[ERROR]",
     "warning": "[WARN]",
-    "info":    "[INFO]",
+    "info": "[INFO]",
 }
 
 
@@ -223,20 +258,28 @@ class Linter:
             for line in lines:
                 if line.strip():
                     if not line.strip().startswith("#"):
-                        findings.append((
-                            filepath, 1, "error",
-                            f"Chapter file does not start with a heading: '{line.strip()[:40]}...'"
-                        ))
+                        findings.append(
+                            (
+                                filepath,
+                                1,
+                                "error",
+                                f"Chapter file does not start with a heading: '{line.strip()[:40]}...'",
+                            )
+                        )
                     break
 
         # Front matter headings need .unnumbered .unlisted
         if section == "front":
             for i, line in enumerate(lines, 1):
                 if line.startswith("# ") and ".unnumbered" not in line:
-                    findings.append((
-                        filepath, i, "warning",
-                        "Front matter heading missing {.unnumbered .unlisted}"
-                    ))
+                    findings.append(
+                        (
+                            filepath,
+                            i,
+                            "warning",
+                            "Front matter heading missing {.unnumbered .unlisted}",
+                        )
+                    )
                     break
 
         # Unclosed fenced divs
@@ -244,10 +287,14 @@ class Linter:
         if content.startswith(":::"):
             div_count += 1
         if div_count % 2 != 0:
-            findings.append((
-                filepath, 0, "error",
-                f"Possibly unclosed fenced div ({div_count} ':::' markers, expected even)"
-            ))
+            findings.append(
+                (
+                    filepath,
+                    0,
+                    "error",
+                    f"Possibly unclosed fenced div ({div_count} ':::' markers, expected even)",
+                )
+            )
 
         # BOM
         if content.startswith("\ufeff"):
@@ -255,10 +302,9 @@ class Linter:
 
         # Trailing newline
         if content and not content.endswith("\n"):
-            findings.append((
-                filepath, len(lines), "warning",
-                "File does not end with a newline"
-            ))
+            findings.append(
+                (filepath, len(lines), "warning", "File does not end with a newline")
+            )
 
         return findings
 
@@ -280,7 +326,9 @@ class Linter:
         if self.total_counts["info"]:
             parts.append(f"{self.total_counts['info']} info")
 
-        print(f"  {', '.join(parts)} across {self.files_with_issues}/{len(self.files)} files")
+        print(
+            f"  {', '.join(parts)} across {self.files_with_issues}/{len(self.files)} files"
+        )
 
         if self.fix:
             print(f"  Applied {self.total_fixes} fixes")
@@ -288,5 +336,7 @@ class Linter:
             if remaining > 0:
                 print(f"  {remaining} issues require manual review")
 
-        if not self.fix and (self.total_counts["error"] or self.total_counts["warning"]):
-            print(f"  Run with --fix to auto-correct fixable issues")
+        if not self.fix and (
+            self.total_counts["error"] or self.total_counts["warning"]
+        ):
+            print("  Run with --fix to auto-correct fixable issues")

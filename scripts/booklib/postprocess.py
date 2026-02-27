@@ -38,7 +38,9 @@ def patch_epub(epub_path, config, verbose=False):
     """
     # Support both BookConfig and raw dict
     if hasattr(config, "get"):
-        epub_config = config.get("epub", {}) if isinstance(config.get("epub"), dict) else {}
+        epub_config = (
+            config.get("epub", {}) if isinstance(config.get("epub"), dict) else {}
+        )
         title = config.get("title", "book")
         series = config.get("series")
         series_number = config.get("series_number")
@@ -49,9 +51,7 @@ def patch_epub(epub_path, config, verbose=False):
         series_number = None
 
     accessibility = epub_config.get("accessibility", {})
-    cover_alt = epub_config.get(
-        "cover_alt", f"Cover image for {title}"
-    )
+    cover_alt = epub_config.get("cover_alt", f"Cover image for {title}")
 
     if not os.path.exists(epub_path):
         print(f"  Error: {epub_path} not found")
@@ -87,6 +87,7 @@ def patch_epub(epub_path, config, verbose=False):
     except Exception as e:
         print(f"  Error during post-processing: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -120,7 +121,9 @@ def _patch_opf(opf_path, accessibility, series, series_number, verbose):
             meta_lines.append(f'    <meta property="schema:{prop}">{val}</meta>')
 
     for feat in accessibility.get("accessibilityFeature", []):
-        meta_lines.append(f'    <meta property="schema:accessibilityFeature">{feat}</meta>')
+        meta_lines.append(
+            f'    <meta property="schema:accessibilityFeature">{feat}</meta>'
+        )
 
     for prop in ["accessibilityHazard", "accessibilitySummary"]:
         val = accessibility.get(prop)
@@ -193,7 +196,7 @@ def _patch_cover(tmpdir, cover_alt, verbose):
                     new_content,
                 )
                 new_content = re.sub(
-                    r'(<img(?![^>]*alt=)[^>]*?)(\/?>)',
+                    r"(<img(?![^>]*alt=)[^>]*?)(\/?>)",
                     rf'\1 alt="{cover_alt}" \2',
                     new_content,
                 )
@@ -243,6 +246,7 @@ def _rezip_epub(source_dir, output_path):
 
 # ── Standalone CLI ─────────────────────────────────────────────────────
 
+
 def main():
     parser = argparse.ArgumentParser(description="Post-process epub for compliance")
     parser.add_argument("epub", help="Path to epub file")
@@ -259,7 +263,7 @@ def main():
 
     print(f"  Post-processing: {args.epub}")
     if patch_epub(args.epub, config, verbose=args.verbose):
-        print(f"  Done.")
+        print("  Done.")
     else:
         sys.exit(1)
 

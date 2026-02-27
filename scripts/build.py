@@ -44,7 +44,7 @@ def resolve_book(identifier):
     if not book_dir:
         print(f"Error: Could not find book '{identifier}'")
         print(f"  Searched in: {os.path.join(project_root, 'manuscript')}")
-        print(f"  Tip: Run from the project root, or pass a direct path.")
+        print("  Tip: Run from the project root, or pass a direct path.")
         sys.exit(1)
 
     try:
@@ -78,7 +78,7 @@ def cmd_build(args):
 
     config.summary()
     if args.ms_only:
-        print(f"  Mode:   manuscript-only (chapters/ only)")
+        print("  Mode:   manuscript-only (chapters/ only)")
 
     # Assemble input files
     input_files = assemble_inputs(book_dir, manuscript_only=args.ms_only)
@@ -157,6 +157,7 @@ def cmd_lint(args):
         # Flat layout fallback
         import glob
         from booklib.resolve import natural_sort_key
+
         files = sorted(
             glob.glob(os.path.join(book_dir, "*.md")),
             key=natural_sort_key,
@@ -262,16 +263,26 @@ def _add_build_args(parser):
     fmt.add_argument("--all", action="store_true", help="Build epub + docx + md")
 
     opts = parser.add_argument_group("options")
-    opts.add_argument("--ms-only", action="store_true",
-                      help="Chapters only, no front/back matter")
+    opts.add_argument(
+        "--ms-only", action="store_true", help="Chapters only, no front/back matter"
+    )
     opts.add_argument("--output-dir", help="Override output directory")
     opts.add_argument("--verbose", "-v", action="store_true")
-    opts.add_argument("--no-validate", action="store_true",
-                      help="Skip epubcheck after epub build")
-    opts.add_argument("--json-report", nargs="?", const=True, default=None,
-                      help="Save epubcheck JSON report")
-    opts.add_argument("--keep-tex", action="store_true",
-                      help="Keep intermediate .tex/.log for PDF debugging")
+    opts.add_argument(
+        "--no-validate", action="store_true", help="Skip epubcheck after epub build"
+    )
+    opts.add_argument(
+        "--json-report",
+        nargs="?",
+        const=True,
+        default=None,
+        help="Save epubcheck JSON report",
+    )
+    opts.add_argument(
+        "--keep-tex",
+        action="store_true",
+        help="Keep intermediate .tex/.log for PDF debugging",
+    )
 
 
 # ── Main ───────────────────────────────────────────────────────────────
@@ -284,7 +295,11 @@ def main():
     # If the first positional arg isn't a known subcommand, prepend "build"
     # so argparse sees it as "build trench --epub".
     known_commands = {"build", "lint", "validate"}
-    if len(sys.argv) > 1 and sys.argv[1] not in known_commands and not sys.argv[1].startswith("-"):
+    if (
+        len(sys.argv) > 1
+        and sys.argv[1] not in known_commands
+        and not sys.argv[1].startswith("-")
+    ):
         args = parser.parse_args(["build"] + sys.argv[1:])
     else:
         args = parser.parse_args()

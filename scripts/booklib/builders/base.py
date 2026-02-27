@@ -24,9 +24,11 @@ class BaseBuilder(ABC):
     """
 
     format_name = None  # Override in subclass
-    extension = None    # Override in subclass
+    extension = None  # Override in subclass
 
-    def __init__(self, config, book_dir, input_files, output_dir, verbose=False, **kwargs):
+    def __init__(
+        self, config, book_dir, input_files, output_dir, verbose=False, **kwargs
+    ):
         self.config = config
         self.book_dir = book_dir
         self.input_files = input_files
@@ -71,10 +73,13 @@ class BaseBuilder(ABC):
         """
         cmd = ["pandoc"]
         cmd.extend(self.config.metadata_args())
-        cmd.extend([
-            "--top-level-division=chapter",
-            "--from", self.config.from_str,
-        ])
+        cmd.extend(
+            [
+                "--top-level-division=chapter",
+                "--from",
+                self.config.from_str,
+            ]
+        )
 
         if extra_args:
             cmd.extend(extra_args)

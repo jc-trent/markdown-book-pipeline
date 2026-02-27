@@ -59,18 +59,19 @@ class PdfBuilder(BaseBuilder):
 
         # ── Check for xelatex ─────────────────────────────
         if not self.check_tool(engine):
-            print(f"  Install TeX Live or MacTeX:")
-            print(f"    macOS:  brew install --cask mactex")
-            print(f"    Ubuntu: sudo apt install texlive-xetex texlive-fonts-extra")
+            print("  Install TeX Live or MacTeX:")
+            print("    macOS:  brew install --cask mactex")
+            print("    Ubuntu: sudo apt install texlive-xetex texlive-fonts-extra")
             return False
 
         # ── Step 1: Pandoc → intermediate LaTeX ───────────
-        self.log(f"  Generating LaTeX...")
+        self.log("  Generating LaTeX...")
 
         extra = [
             f"--template={template}",
             f"--pdf-engine={engine}",
-            "-o", self.intermediate_tex,
+            "-o",
+            self.intermediate_tex,
         ]
 
         if self.config.get("series"):
@@ -119,7 +120,9 @@ class PdfBuilder(BaseBuilder):
             self.log(f"  {engine} pass {pass_num}...")
             try:
                 result = subprocess.run(
-                    compile_cmd, capture_output=True, text=True,
+                    compile_cmd,
+                    capture_output=True,
+                    text=True,
                 )
                 if result.returncode != 0:
                     print(f"  ✗ {engine} pass {pass_num} failed")
@@ -147,7 +150,8 @@ class PdfBuilder(BaseBuilder):
             log_content = f.read()
 
         errors = [
-            line for line in log_content.splitlines()
+            line
+            for line in log_content.splitlines()
             if line.startswith("!") or "Error" in line
         ]
 
@@ -165,7 +169,8 @@ class PdfBuilder(BaseBuilder):
         try:
             result = subprocess.run(
                 ["strings", self.output_file],
-                capture_output=True, text=True,
+                capture_output=True,
+                text=True,
             )
             counts = re.findall(r"/Count\s+(\d+)", result.stdout)
             if counts:
@@ -188,4 +193,4 @@ class PdfBuilder(BaseBuilder):
                 os.remove(path)
         if os.path.exists(self.intermediate_tex):
             os.remove(self.intermediate_tex)
-        self.log(f"  Cleaned up intermediate files")
+        self.log("  Cleaned up intermediate files")

@@ -51,6 +51,7 @@ PDF_DEFAULTS = {
 
 class ConfigError(Exception):
     """Raised when book.yaml is missing or invalid."""
+
     pass
 
 
@@ -80,7 +81,9 @@ class BookConfig:
             data = yaml.safe_load(f)
 
         if not isinstance(data, dict):
-            raise ConfigError(f"book.yaml must be a YAML mapping, got {type(data).__name__}")
+            raise ConfigError(
+                f"book.yaml must be a YAML mapping, got {type(data).__name__}"
+            )
 
         # Validate required fields
         missing = [key for key in REQUIRED_FIELDS if not data.get(key)]
@@ -91,7 +94,12 @@ class BookConfig:
 
         # Apply top-level defaults
         for key, default in DEFAULTS.items():
-            data.setdefault(key, default if not isinstance(default, (list, dict)) else type(default)(default))
+            data.setdefault(
+                key,
+                default
+                if not isinstance(default, (list, dict))
+                else type(default)(default),
+            )
 
         # Apply format-section defaults
         for key, default in EPUB_DEFAULTS.items():

@@ -18,15 +18,17 @@ class MarkdownBuilder(BaseBuilder):
         extra = [
             "--standalone",
             "--wrap=none",
-            "--to", "markdown",
-            "-o", self.output_file,
+            "--to",
+            "markdown",
+            "-o",
+            self.output_file,
         ]
 
         # Strip formatting filter (removes epub/pdf scaffolding)
         strip_filter = self.resolve("strip_formatting.lua")
         if strip_filter:
             extra.extend(["--lua-filter", strip_filter])
-            self.log(f"  Filter: strip_formatting.lua")
+            self.log("  Filter: strip_formatting.lua")
 
         cmd = self.run_pandoc(extra)
         cmd.extend(self.input_files)

@@ -79,7 +79,7 @@ def validate_epub(epub_path, verbose=False, json_report=None):
         cmd.extend(["--json", json_report])
 
     if verbose:
-        print(f"  Validating with epubcheck...")
+        print("  Validating with epubcheck...")
 
     try:
         result = subprocess.run(cmd, capture_output=True, text=True)
@@ -96,13 +96,15 @@ def validate_epub(epub_path, verbose=False, json_report=None):
             warnings = int(summary.group(3))
 
             if fatals == 0 and errors == 0 and warnings == 0:
-                print(f"  ✓ epubcheck: valid (no errors, no warnings)")
+                print("  ✓ epubcheck: valid (no errors, no warnings)")
             elif fatals == 0 and errors == 0:
                 print(f"  ⚠ epubcheck: valid with {warnings} warning(s)")
             else:
-                print(f"  ✗ epubcheck: {fatals} fatal, {errors} error(s), {warnings} warning(s)")
+                print(
+                    f"  ✗ epubcheck: {fatals} fatal, {errors} error(s), {warnings} warning(s)"
+                )
         elif result.returncode == 0:
-            print(f"  ✓ epubcheck: valid")
+            print("  ✓ epubcheck: valid")
         else:
             print(f"  ✗ epubcheck: failed (exit code {result.returncode})")
 
@@ -117,7 +119,7 @@ def validate_epub(epub_path, verbose=False, json_report=None):
         return result.returncode == 0
 
     except FileNotFoundError:
-        print(f"  Warning: Could not run epubcheck (java not found?)")
+        print("  Warning: Could not run epubcheck (java not found?)")
         return None
     except Exception as e:
         if verbose:

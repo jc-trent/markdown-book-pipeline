@@ -4,8 +4,6 @@ EPUB builder.
 Pipeline: pandoc → epub → postprocess (accessibility) → epubcheck validation.
 """
 
-import os
-
 from booklib.builders.base import BaseBuilder
 from booklib.postprocess import patch_epub
 from booklib.epubcheck import validate_epub
@@ -25,7 +23,8 @@ class EpubBuilder(BaseBuilder):
         # ── Pandoc command ─────────────────────────────────
         extra = [
             "--epub-title-page=false",
-            "-o", self.output_file,
+            "-o",
+            self.output_file,
         ]
 
         # TOC
@@ -39,7 +38,7 @@ class EpubBuilder(BaseBuilder):
             extra.extend(["--css", css_path])
             self.log(f"  CSS:   {css_path}")
         else:
-            print(f"  Warning: No epub CSS found")
+            print("  Warning: No epub CSS found")
 
         # Cover (per-book artifact)
         cover_path = self.resolve(epub.get("cover"))
@@ -47,7 +46,7 @@ class EpubBuilder(BaseBuilder):
             extra.extend(["--epub-cover-image", cover_path])
             self.log(f"  Cover: {cover_path}")
         else:
-            print(f"  Warning: No cover image found")
+            print("  Warning: No cover image found")
 
         # Build pandoc command
         cmd = self.run_pandoc(extra)
@@ -67,7 +66,7 @@ class EpubBuilder(BaseBuilder):
                 self.log("  ✓ Post-processing complete")
         except Exception as e:
             print(f"  Warning: Post-processing failed: {e}")
-            print(f"  (epub was generated but may have compliance issues)")
+            print("  (epub was generated but may have compliance issues)")
 
         # ── Validate ───────────────────────────────────────
         if not skip_validate:
